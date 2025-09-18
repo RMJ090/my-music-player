@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemutar Musik Sederhana</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe, #4facfe);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+            /* animasi background */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 2rem;
+            animation: fadeIn 2s ease;
+        }
+        
+        .player {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            animation: fadeInUp 1.2s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        audio {
+            width: 100%;
+            margin: 15px 0;
+        }
+        
+        button {
+            padding: 10px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+        
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.08);
+            /* membesar halus */
+            box-shadow: 0 0 12px rgba(0, 123, 255, 0.7);
+        }
+        
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+        
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 1.4rem;
+            }
+            button {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Pemutar Musik</h1>
+    <div class="player">
+        <select id="playlist"></select>
+        <audio id="audioPlayer" controls></audio>
+        <br>
+        <button onclick="prevSong()">⏮ Sebelumnya</button>
+        <button onclick="playPause()">⏯ Play/Pause</button>
+        <button onclick="nextSong()">⏭ Berikutnya</button>
+    </div>
+
+    <script>
+        const songs = [{
+            title: "AFTERSHINE - SHOLAWAT ALLAHUL KAFI",
+            src: "musik/AFTERSHINE - SHOLAWAT ALLAHUL KAFI.mp3"
+        }, {
+            title: "Cyka Blyat",
+            src: "musik/Cyka Blyat.mp3"
+        }, {
+            title: "Kebesaranmu",
+            src: "musik/Kebesaranmu.mp3"
+        }, {
+            title: "Manusia Idolaku Nabiyullah Muhammad",
+            src: "musik/Manusia Idolaku Nabiyullah Muhammad.mp3"
+        }, {
+            title: "Russian Village Boys x Cosmo & Skoro - Cyka",
+            src: "musik/Russian Village Boys x Cosmo & Skoro - Cyka.mp3"
+        }, {
+            title: "Samurai",
+            src: "musik/SAMURAI.mp3"
+        }, {
+            title: "Musiknya Asyik",
+            src: "musik/Musiknya Asyik.mp3"
+        }, {
+            title: "Runtah",
+            src: "musik/Runtah.mp3"
+        }, {
+            title: "DJ Chiro",
+            src: "musik/DJ Chiro.mp3"
+        }, {
+            title: "DJ ALONE SLOWED",
+            src: "musik/DJ ALONE SLOWED.mp3"
+        }];
+
+        let currentSong = 0;
+        const audioPlayer = document.getElementById("audioPlayer");
+        const playlist = document.getElementById("playlist");
+
+        songs.forEach((song, index) => {
+            let option = document.createElement("option");
+            option.value = index;
+            option.textContent = song.title;
+            playlist.appendChild(option);
+        });
+
+        function loadSong(index) {
+            audioPlayer.src = songs[index].src;
+            playlist.value = index;
+            audioPlayer.play();
+        }
+
+        function nextSong() {
+            currentSong = (currentSong + 1) % songs.length;
+            loadSong(currentSong);
+        }
+
+        function prevSong() {
+            currentSong = (currentSong - 1 + songs.length) % songs.length;
+            loadSong(currentSong);
+        }
+
+        function playPause() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            } else {
+                audioPlayer.pause();
+            }
+        }
+
+        playlist.addEventListener("change", function() {
+            currentSong = parseInt(this.value);
+            loadSong(currentSong);
+        });
+
+        audioPlayer.addEventListener("ended", nextSong);
+
+        loadSong(currentSong);
+    </script>
+
+</body>
+
+</html>
